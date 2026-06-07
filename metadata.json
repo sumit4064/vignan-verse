@@ -1,0 +1,6 @@
+{
+  "name": "Vignan Universe",
+  "description": "A comprehensive campus management system for Vignan University, providing streamlined access to student records, alumni networks, events, and resources.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

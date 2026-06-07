@@ -1,0 +1,124 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isDbAdmin() {
+      return exists(/databases/$(database)/documents/users/$(request.auth.uid)) && 
+             (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.get('role', 'Student') == 'Admin' ||
+              get(/databases/$(database)/documents/users/$(request.auth.uid)).data.get('role', 'Student') == 'admin');
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && 
+        (isDbAdmin() ||
+         request.auth.token.get('email', '') == "itzsumit2005@gmail.com");
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function hasOnlyAllowedFields(fields) {
+      return request.resource.data.keys().hasOnly(fields);
+    }
+
+    function isValidLibraryBook(data) {
+      return hasOnlyAllowedFields(['title', 'author', 'category', 'isbn', 'description', 'publisher', 'totalCopies', 'availableCopies', 'image_url', 'createdAt']) &&
+             data.title is string && data.title.size() > 0 &&
+             data.author is string && data.author.size() > 0 &&
+             data.totalCopies is number && data.totalCopies >= 0 &&
+             data.availableCopies is number && data.availableCopies >= 0 &&
+             data.availableCopies <= data.totalCopies;
+    }
+
+    function isValidBorrowingRecord(data) {
+      return hasOnlyAllowedFields(['bookId', 'bookTitle', 'studentId', 'studentName', 'borrowDate', 'dueDate', 'returnDate', 'status', 'fine']) &&
+             data.bookId is string &&
+             data.studentId is string &&
+             data.status in ['Borrowed', 'Returned', 'Overdue'] &&
+             data.fine is number && data.fine >= 0;
+    }
+
+    // ===============================================================
+    // Collection Rules
+    // ===============================================================
+    
+    match /users/{userId} {
+      allow read: if isOwner(userId) || isAdmin();
+      allow write: if isOwner(userId) || isAdmin();
+    }
+
+    match /metadata/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /test/{docId} {
+      allow read: if true;
+    }
+
+    match /students/{studentId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /alumni/{alumniId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /lostFound/{itemId} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+
+    match /clubs/{clubId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /departments/{deptId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /notices/{noticeId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /festEvents/{eventId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /books/{bookId} {
+      allow read: if true;
+      allow create: if isAdmin() && isValidLibraryBook(request.resource.data);
+      allow update: if (isAdmin() && isValidLibraryBook(request.resource.data)) || 
+                      (isAuthenticated() && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['availableCopies']));
+    }
+
+    match /borrowingRecords/{recordId} {
+      allow read: if isAdmin() || isOwner(resource.data.studentId);
+      allow create: if isAuthenticated() && isValidBorrowingRecord(request.resource.data) && request.resource.data.studentId == request.auth.uid;
+      allow update: if (isAdmin() || isOwner(resource.data.studentId)) && isValidBorrowingRecord(request.resource.data);
+    }
+
+    match /techEvents/{eventId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /notifications/{notifId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+  }
+}

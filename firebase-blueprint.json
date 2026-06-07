@@ -1,0 +1,180 @@
+{
+  "entities": {
+    "Student": {
+      "title": "Student",
+      "description": "Student record",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "department": { "type": "string" },
+        "year": { "type": "string" },
+        "image_url": { "type": "string" },
+        "photo": { "type": "string" },
+        "createdAt": { "type": "number" }
+      },
+      "required": ["name", "email", "department", "year", "createdAt"]
+    },
+    "Alumni": {
+      "title": "Alumni",
+      "description": "Alumni record",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "department": { "type": "string" },
+        "yearOfGraduation": { "type": "string" },
+        "image_url": { "type": "string" },
+        "photo": { "type": "string" },
+        "createdAt": { "type": "number" }
+      },
+      "required": ["name", "email", "department", "yearOfGraduation", "createdAt"]
+    },
+    "LostFoundItem": {
+      "title": "LostFoundItem",
+      "description": "Lost or found item",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "status": { "type": "string", "enum": ["Lost", "Found", "Resolved"] },
+        "type": { "type": "string", "enum": ["lost", "found"] },
+        "photo": { "type": "string" },
+        "image_url": { "type": "string" },
+        "createdAt": { "type": "number" }
+      },
+      "required": ["title", "description", "status", "type", "createdAt"]
+    },
+    "Club": {
+      "title": "Club",
+      "description": "SAC Club",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "members": { "type": "number" },
+        "achievement": { "type": "string" },
+        "president": { "type": "string" },
+        "category": { "type": "string" },
+        "image_url": { "type": "string" },
+        "qualities": { "type": "array", "items": { "type": "string" } }
+      },
+      "required": ["name", "description", "members", "achievement"]
+    },
+    "DepartmentDetail": {
+      "title": "DepartmentDetail",
+      "description": "Department information",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "fullName": { "type": "string" },
+        "description": { "type": "string" },
+        "hod": { "type": "string" },
+        "courses": { "type": "array", "items": { "type": "string" } },
+        "achievements": { "type": "array", "items": { "type": "string" } },
+        "contact": { "type": "string" },
+        "image_url": { "type": "string" }
+      },
+      "required": ["name", "fullName", "description", "hod", "courses", "achievements", "contact"]
+    },
+    "Notice": {
+      "title": "Notice",
+      "description": "Campus notice",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "content": { "type": "string" },
+        "department": { "type": "string" },
+        "date": { "type": "string" },
+        "createdAt": { "type": "number" }
+      },
+      "required": ["title", "content", "department", "date", "createdAt"]
+    },
+    "FestEvent": {
+      "title": "FestEvent",
+      "description": "College fest event",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "date": { "type": "string" },
+        "venue": { "type": "string" },
+        "description": { "type": "string" },
+        "category": { "type": "string" }
+      },
+      "required": ["title", "date", "venue", "description"]
+    },
+    "LibraryBook": {
+      "title": "LibraryBook",
+      "description": "Library book",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "author": { "type": "string" },
+        "category": { "type": "string" },
+        "isbn": { "type": "string" },
+        "description": { "type": "string" },
+        "publisher": { "type": "string" },
+        "totalCopies": { "type": "number" },
+        "availableCopies": { "type": "number" },
+        "image_url": { "type": "string" },
+        "createdAt": { "type": "number" }
+      },
+      "required": ["title", "author", "category", "totalCopies", "availableCopies", "createdAt"]
+    },
+    "BorrowingRecord": {
+      "title": "BorrowingRecord",
+      "description": "Book borrowing record",
+      "type": "object",
+      "properties": {
+        "bookId": { "type": "string" },
+        "bookTitle": { "type": "string" },
+        "studentId": { "type": "string" },
+        "studentName": { "type": "string" },
+        "borrowDate": { "type": "string", "format": "date-time" },
+        "dueDate": { "type": "string", "format": "date-time" },
+        "returnDate": { "type": "string", "format": "date-time" },
+        "status": { "type": "string", "enum": ["Borrowed", "Returned", "Overdue"] },
+        "fine": { "type": "number" }
+      },
+      "required": ["bookId", "bookTitle", "studentId", "studentName", "borrowDate", "dueDate", "status", "fine"]
+    },
+    "TechnicalEvent": {
+      "title": "TechnicalEvent",
+      "description": "Technical event or opportunity",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "type": { "type": "string", "enum": ["Internship", "Hackathon", "Workshop", "Webinar"] },
+        "deadline": { "type": "string" },
+        "link": { "type": "string" },
+        "description": { "type": "string" }
+      },
+      "required": ["title", "type", "deadline", "link", "description"]
+    },
+    "AppNotification": {
+      "title": "AppNotification",
+      "description": "App active notification",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "type": { "type": "string" },
+        "path": { "type": "string" },
+        "createdAt": { "type": "number" }
+      },
+      "required": ["title", "type", "path", "createdAt"]
+    }
+  },
+  "firestore": {
+    "students": { "schema": "Student", "description": "Collection of students" },
+    "alumni": { "schema": "Alumni", "description": "Collection of alumni" },
+    "lostFound": { "schema": "LostFoundItem", "description": "Collection of lost and found items" },
+    "clubs": { "schema": "Club", "description": "Collection of SAC clubs" },
+    "departments": { "schema": "DepartmentDetail", "description": "Collection of departments" },
+    "notices": { "schema": "Notice", "description": "Collection of notices" },
+    "festEvents": { "schema": "FestEvent", "description": "Collection of fest events" },
+    "books": { "schema": "LibraryBook", "description": "Collection of library books" },
+    "techEvents": { "schema": "TechnicalEvent", "description": "Collection of technical events" },
+    "borrowingRecords": { "schema": "BorrowingRecord", "description": "Collection of book borrowing records" },
+    "notifications": { "schema": "AppNotification", "description": "Collection of app notifications" }
+  }
+}
